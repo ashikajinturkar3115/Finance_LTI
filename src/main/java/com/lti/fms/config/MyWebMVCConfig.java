@@ -53,7 +53,7 @@ public class MyWebMVCConfig {
 			ComboPooledDataSource dataSource = new ComboPooledDataSource();
 			dataSource.setDriverClass("oracle.jdbc.driver.OracleDriver");
 			dataSource.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:xe");
-			dataSource.setUser("DB_FINANCE");
+			dataSource.setUser("DBFINANCE");
 			dataSource.setPassword("finance");
 			return dataSource;
 		} catch (Throwable e) {
@@ -64,7 +64,7 @@ public class MyWebMVCConfig {
       Properties oracleProperties() {
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.dialect", Oracle10gDialect.class.getName());
-		properties.setProperty("hibernate.hbm2ddl.auto", "update");
+		properties.setProperty("hibernate.hbm2ddl.auto", "create");
 		properties.setProperty("hibernate.show_sql", "false");
 		properties.setProperty("spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation", "true");
 		return properties;

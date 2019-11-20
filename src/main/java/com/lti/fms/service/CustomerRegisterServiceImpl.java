@@ -25,7 +25,7 @@ public class CustomerRegisterServiceImpl implements CustomerRegisterService{
 	@Override
 	public CustomerRegistration createCustomer(CustomerRegistration customerRegistration) {
 		
-		return null;
+		return customerRegisterDao.createCustomer(customerRegistration);
 	}
 
 }

@@ -13,14 +13,15 @@
 	src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <style type="text/css">
-
 </style>
 </head>
 <body>
 
 
 
-	<form class="form-horizontal" action="" method="POST">
+	<form class="form-horizontal" action="registerCustomer" method="POST"
+		modelAttribute="customerRegistration">
+		
 		<fieldset>
 			<div id="legend">
 				<legend class="abc">Register</legend>
@@ -47,11 +48,11 @@
 
 			<div class="control-group">
 				<!-- confirm Password -->
-				<label class="control-label" for="password_confirm">
+				<label class="control-label" for="confirmPassword">
 					(Confirm)</label>
 				<div class="controls">
-					<input type="password" id="password_confirm"
-						name="password_confirm" placeholder="" class="input-xlarge">
+					<input type="password" id="confirmPassword" name="confirmPassword"
+						placeholder="" class="input-xlarge">
 
 				</div>
 			</div>
@@ -88,7 +89,7 @@
 				<!-- Bank Name -->
 				<label class="control-label" for="bankName">Enter Bank</label>
 				<div class="controls">
-					<select>
+					<select name="bankName">
 						<option value="SBI">SBI</option>
 						<option value="HSBC">HSBC</option>
 						<option value="BOI">BOI</option>
@@ -134,10 +135,10 @@
 				<!-- IFSC  -->
 				<label class="control-label" for="cardType">Card Type </label>
 				<div class="controls">
-					<select>
+					<select name="cardType">
 						<option value="NONE">-----Select----</option>
 						<option value="GOLD">GOLD</option>
-						<option value="TITANIUM">TITANIUM</option>	
+						<option value="TITANIUM">TITANIUM</option>
 					</select>
 
 				</div>
@@ -146,7 +147,7 @@
 			<div class="control-group">
 				<!-- Button -->
 				<div class="controls">
-					<button class="btn btn-success">Register</button>
+					<input type="submit" value="Register" name="Register">
 				</div>
 			</div>
 		</fieldset>

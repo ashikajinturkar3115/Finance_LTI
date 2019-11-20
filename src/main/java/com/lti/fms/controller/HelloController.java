@@ -23,13 +23,21 @@ public class HelloController {
 
 	@Autowired
 	private CustomerRegisterService customerRegisterService;
-	
+
 	public IDetailsService getService() {
 		return service;
 	}
 
 	public void setService(IDetailsService service) {
 		this.service = service;
+	}
+
+	public CustomerRegisterService getCustomerRegisterService() {
+		return customerRegisterService;
+	}
+
+	public void setCustomerRegisterService(CustomerRegisterService customerRegisterService) {
+		this.customerRegisterService = customerRegisterService;
 	}
 
 	private int i = 0;

@@ -23,7 +23,7 @@ public class EMIPurchaseDescription implements Serializable {
 	@GeneratedValue
 	private int emiPurchaseDescpritionId;
 
-	private String EMICardNumber;
+	private String emiCardNumber;
 
 	private int totalAmount;
 
@@ -45,18 +45,14 @@ public class EMIPurchaseDescription implements Serializable {
 		this.emiPurchaseDescpritionId = emiPurchaseDescpritionId;
 	}
 
-	/**
-	 * @return the eMICardNumber
-	 */
-	public String getEMICardNumber() {
-		return EMICardNumber;
+	
+
+	public String getEmiCardNumber() {
+		return emiCardNumber;
 	}
 
-	/**
-	 * @param eMICardNumber the eMICardNumber to set
-	 */
-	public void setEMICardNumber(String eMICardNumber) {
-		EMICardNumber = eMICardNumber;
+	public void setEmiCardNumber(String emiCardNumber) {
+		this.emiCardNumber = emiCardNumber;
 	}
 
 	/**
