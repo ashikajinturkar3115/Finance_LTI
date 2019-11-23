@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -20,9 +21,10 @@ import javax.persistence.Table;
 public class CustomerRegistration implements Serializable {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "seq1")
+	@SequenceGenerator(name = "seq1", sequenceName = "TBL_CUST_REGISTRATION_SEQ", initialValue = 1, allocationSize = 1)
 	private int customerId;
-
+	private int customerLoginId;
 	private String name;
 	private String contact;
 	private String email;
@@ -34,6 +36,18 @@ public class CustomerRegistration implements Serializable {
 	private String password;
 	private String confirmPassword;
 	private String cardType;
+
+	private String filePathAdhar;
+	private String fileNameAdhar;
+	private String contentTypeAdhar;
+
+	private String filePathCheque;
+	private String fileNameCheque;
+	private String contentTypeCheque;
+
+	private String filePathPAN;
+	private String fileNamePAN;
+	private String contentTypePAN;
 
 	/**
 	 * @return the customerId
@@ -197,10 +211,150 @@ public class CustomerRegistration implements Serializable {
 	}
 
 	/**
+	 * @return the filePathAdhar
+	 */
+	public String getFilePathAdhar() {
+		return filePathAdhar;
+	}
+
+	/**
+	 * @param filePathAdhar the filePathAdhar to set
+	 */
+	public void setFilePathAdhar(String filePathAdhar) {
+		this.filePathAdhar = filePathAdhar;
+	}
+
+	/**
+	 * @return the fileNameAdhar
+	 */
+	public String getFileNameAdhar() {
+		return fileNameAdhar;
+	}
+
+	/**
+	 * @param fileNameAdhar the fileNameAdhar to set
+	 */
+	public void setFileNameAdhar(String fileNameAdhar) {
+		this.fileNameAdhar = fileNameAdhar;
+	}
+
+	/**
+	 * @return the contentTypeAdhar
+	 */
+	public String getContentTypeAdhar() {
+		return contentTypeAdhar;
+	}
+
+	/**
+	 * @param contentTypeAdhar the contentTypeAdhar to set
+	 */
+	public void setContentTypeAdhar(String contentTypeAdhar) {
+		this.contentTypeAdhar = contentTypeAdhar;
+	}
+
+	/**
 	 * @param cardType the cardType to set
 	 */
 	public void setCardType(String cardType) {
 		this.cardType = cardType;
+	}
+
+	/**
+	 * @return the filePathCheque
+	 */
+	public String getFilePathCheque() {
+		return filePathCheque;
+	}
+
+	/**
+	 * @param filePathCheque the filePathCheque to set
+	 */
+	public void setFilePathCheque(String filePathCheque) {
+		this.filePathCheque = filePathCheque;
+	}
+
+	/**
+	 * @return the fileNameCheque
+	 */
+	public String getFileNameCheque() {
+		return fileNameCheque;
+	}
+
+	/**
+	 * @param fileNameCheque the fileNameCheque to set
+	 */
+	public void setFileNameCheque(String fileNameCheque) {
+		this.fileNameCheque = fileNameCheque;
+	}
+
+	/**
+	 * @return the contentTypeCheque
+	 */
+	public String getContentTypeCheque() {
+		return contentTypeCheque;
+	}
+
+	/**
+	 * @param contentTypeCheque the contentTypeCheque to set
+	 */
+	public void setContentTypeCheque(String contentTypeCheque) {
+		this.contentTypeCheque = contentTypeCheque;
+	}
+
+	/**
+	 * @return the filePathPAN
+	 */
+	public String getFilePathPAN() {
+		return filePathPAN;
+	}
+
+	/**
+	 * @param filePathPAN the filePathPAN to set
+	 */
+	public void setFilePathPAN(String filePathPAN) {
+		this.filePathPAN = filePathPAN;
+	}
+
+	/**
+	 * @return the fileNamePAN
+	 */
+	public String getFileNamePAN() {
+		return fileNamePAN;
+	}
+
+	/**
+	 * @param fileNamePAN the fileNamePAN to set
+	 */
+	public void setFileNamePAN(String fileNamePAN) {
+		this.fileNamePAN = fileNamePAN;
+	}
+
+	/**
+	 * @return the contentTypePAN
+	 */
+	public String getContentTypePAN() {
+		return contentTypePAN;
+	}
+
+	/**
+	 * @param contentTypePAN the contentTypePAN to set
+	 */
+	public void setContentTypePAN(String contentTypePAN) {
+		this.contentTypePAN = contentTypePAN;
+	}
+
+	/**
+	 * @return the customerLoginId
+	 */
+	public int getCustomerLoginId() {
+		return customerLoginId;
+	}
+
+	/**
+	 * @param customerLoginId the customerLoginId to set
+	 */
+	public void setCustomerLoginId(int customerLoginId) {
+		this.customerLoginId = customerLoginId;
 	}
 
 }

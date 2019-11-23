@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import javax.persistence.OneToMany;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 public class Products implements Serializable {
 
 	@Id
+	@GeneratedValue
 	private int productID;
 	private String productName;
 	private String productType;

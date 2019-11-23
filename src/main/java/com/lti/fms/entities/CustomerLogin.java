@@ -19,6 +19,7 @@ public class CustomerLogin implements Serializable {
 	private String customerUserName;
 
 	private String customerPassword;
+	
 
 	private String customerStatus;
 

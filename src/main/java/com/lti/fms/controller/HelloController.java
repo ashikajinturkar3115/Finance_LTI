@@ -2,24 +2,49 @@ package com.lti.fms.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
 import org.springframework.web.servlet.ModelAndView;
 
+import com.lti.fms.entities.CustomerLogin;
 import com.lti.fms.entities.CustomerRegistration;
 import com.lti.fms.entities.User;
+import com.lti.fms.service.CustomerLoginService;
 import com.lti.fms.service.CustomerRegisterService;
 import com.lti.fms.service.IDetailsService;
 
+import java.io.File;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+
+import java.io.ByteArrayInputStream;
 
 @Controller
 public class HelloController {
 	@Autowired
 	private IDetailsService service;
+
+	@Autowired
+	private CustomerLoginService customerLoginService;
 
 	@Autowired
 	private CustomerRegisterService customerRegisterService;
@@ -118,12 +143,117 @@ public class HelloController {
 		return mv;
 	}
 
+	@RequestMapping("/registerPage")
+	public ModelAndView registerCustomerPage() {
+		ModelAndView mv = new ModelAndView("registerCustomer");
+		return mv;
+	}
+
 	@RequestMapping("/registerCustomer")
 	public ModelAndView registerCustomer(
 			@ModelAttribute("customerRegistration") CustomerRegistration customerRegistration) {
-		customerRegisterService.createCustomer(customerRegistration);
-		ModelAndView mv = new ModelAndView("registerCustomer");
+
+		CustomerRegistration cuRegistration = null;
+
+		CustomerLogin customerLogin = new CustomerLogin();
+
+		customerLogin.setCustomerUserName(customerRegistration.getUsername());
+		customerLogin.setCustomerPassword(customerRegistration.getPassword());
+		customerLogin.setCustomerStatus("DEACTIVATED");
+		CustomerLogin customerLogin2 = customerLoginService.createCustomerLogin(customerLogin);
+
+		System.out.println(customerLogin2.getCustomerLoginId() + "++++++++++++++++++++++++++"
+				+ customerLogin2.getCustomerPassword());
+
+		customerRegistration.setCustomerLoginId(customerLogin2.getCustomerLoginId());
+		cuRegistration = customerRegisterService.createCustomer(customerRegistration);
+		if (customerRegistration != null) {
+			System.out.println(customerRegistration.getAccountNo() + customerRegistration.getAddress()
+					+ customerRegistration.getCustomerId());
+		}
+
+		System.out.println("leaving register page");
+		System.out.println(cuRegistration.getCustomerId() + "id=========" + cuRegistration.getAddress());
+		ModelAndView mv = new ModelAndView("uploadFile", "userId", cuRegistration.getCustomerId());
 		return mv;
+	}
+
+	@RequestMapping("/uploadFile")
+	public ModelAndView uploadFiles(@RequestParam("file") MultipartFile adhar,
+			@RequestParam("file2") MultipartFile cheque, @RequestParam("file3") MultipartFile pan,
+			@RequestParam("customerId") int customerId, HttpServletRequest httpServletRequest) throws IOException {
+
+		CustomerRegistration customerRegistration = customerRegisterService.findCustomerById(customerId);
+
+		String uploadFolder = httpServletRequest.getServletContext().getRealPath("/uploadfolder");
+		File dFile = new File(uploadFolder);
+		if (!dFile.exists()) {
+			dFile.mkdir();
+		}
+
+		System.out.println(customerRegistration.getAddress());
+		System.out.println(adhar.getContentType());
+		System.out.println(adhar.getOriginalFilename());
+		System.out.println(uploadFolder + "/" + adhar.getOriginalFilename());
+
+		try {
+			if (!adhar.isEmpty()) {
+				customerRegistration.setContentTypeAdhar(adhar.getContentType());
+				customerRegistration.setFileNameAdhar(adhar.getOriginalFilename());
+				customerRegistration.setFilePathAdhar(uploadFolder + "/" + adhar.getOriginalFilename());
+			}
+
+			if (!cheque.isEmpty()) {
+				customerRegistration.setContentTypeCheque(cheque.getContentType());
+				customerRegistration.setFileNameCheque(cheque.getOriginalFilename());
+				customerRegistration.setFilePathCheque(uploadFolder + "/" + cheque.getOriginalFilename());
+			}
+
+			if (!pan.isEmpty()) {
+				customerRegistration.setContentTypePAN(pan.getContentType());
+				customerRegistration.setFileNamePAN(pan.getOriginalFilename());
+				customerRegistration.setFilePathPAN(uploadFolder + "/" + pan.getOriginalFilename());
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		BufferedImage src1 = ImageIO.read(new ByteArrayInputStream(adhar.getBytes()));
+		ImageIO.write(src1, "jpg", new File(uploadFolder + "/" + adhar.getOriginalFilename()));
+
+		BufferedImage src2 = ImageIO.read(new ByteArrayInputStream(cheque.getBytes()));
+		ImageIO.write(src2, "jpg", new File(uploadFolder + "/" + cheque.getOriginalFilename()));
+
+		BufferedImage src3 = ImageIO.read(new ByteArrayInputStream(pan.getBytes()));
+		ImageIO.write(src3, "jpg", new File(uploadFolder + "/" + pan.getOriginalFilename()));
+
+		ArrayList<String> imgNames = new ArrayList<String>();
+		imgNames.add(customerRegistration.getFileNameAdhar());
+		imgNames.add(customerRegistration.getFileNameCheque());
+		imgNames.add(customerRegistration.getFileNamePAN());
+		customerRegisterService.updateCustomer(customerRegistration);
+		System.out.println("loc : " + uploadFolder);
+
+		ModelAndView mv = new ModelAndView("success", "fileName", imgNames);
+
+		return mv;
+
+	}
+
+	@RequestMapping("/getimage/{imagePath}")
+
+	@ResponseBody
+	public byte[] getImage(@PathVariable("imagePath") String imagePath, HttpServletRequest request) throws IOException {
+		System.out.println("In Image controller************");
+		String rpath = request.getServletContext().getRealPath("/uploadfolder") + "/" + imagePath + ".jpg";
+		System.out.println(rpath + "path/*******************");
+		Path path = Paths.get(rpath);
+		System.out.println("In Image controller************" + path);
+
+		byte[] data = Files.readAllBytes(path);
+		System.out.println("data***********" + Arrays.toString(data));
+		return data;
 	}
 
 }

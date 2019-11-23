@@ -3,6 +3,8 @@
  */
 package com.lti.fms.service;
 
+import java.util.List;
+
 import com.lti.fms.entities.CustomerRegistration;
 import com.lti.fms.entities.User;
 
@@ -12,6 +14,14 @@ import com.lti.fms.entities.User;
  */
 public interface CustomerRegisterService {
 	
-	CustomerRegistration createCustomer(CustomerRegistration customerRegistration);
+	public CustomerRegistration createCustomer(CustomerRegistration customerRegistration);
+	
+	public CustomerRegistration updateCustomer(CustomerRegistration customerRegistration);
+	
+	public CustomerRegistration  findCustomerById(int customerId); 
+	
+	public List<CustomerRegistration> getallCustomers();
+	
+	public void deleteCustomerRegistration(Integer customerId);
 	
 }

@@ -16,6 +16,7 @@ import javax.persistence.Table;
 public class ProductDescription implements Serializable {
 
 	@Id
+	@GeneratedValue
 	private int productDescriptionId;
 	private String productDetailsDescription1;
 	private String productDetailsDescription2;

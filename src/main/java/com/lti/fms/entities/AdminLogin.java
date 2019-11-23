@@ -12,6 +12,7 @@ public class AdminLogin implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue
+	@SequenceGenerator(name = "")
 	private Integer adminID;
 
 	private String adminName;

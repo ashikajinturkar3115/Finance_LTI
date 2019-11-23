@@ -7,6 +7,6 @@
 <title>User not found</title>
 </head>
 <body>
-<h2>User not found for id = ${id}</h2>
+<h2>User not found for id </h2>
 </body>
 </html>
