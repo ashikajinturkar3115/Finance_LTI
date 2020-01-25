@@ -27,35 +27,53 @@
 					<strong>Forgot Password</strong>
 				</p>
 
-				<form action="getotp" method="post">
-
+				<form action="getotp" method="get">
 
 					<div class="password">
 						<label>Enter Email ID:</label><input type="Text"
 							class="form-control" name="emailid" placeholder="user@email.com"
-							required>
+							required><br>
+						<div
+							style="color: Red; font-family: monospace; font-size: x-large;">
+
+							<strong> <c:if test="${ !empty msgemail}">${msgemail} </c:if>
+								<strong> </strong></strong>
+						</div>
 					</div>
 					<br>
 					<div class="col-md-12 text-center">
 						<button type="Submit" id="sub" name="getmail"
 							class="btn btn-primary btn-lg">Get OTP</button>
+						<div
+							style="color: Red; font-family: monospace; font-size: x-large;">
+
+							<strong> <c:if test="${ !empty msg}">${msg} </c:if> <strong>
+
+							</strong></strong>
+						</div>
+
 					</div>
-					<c:if test="${ !empty msg}">${msg} </c:if>
+
+
 				</form>
 				<form action="getotp" method="post">
 					<div class="OTP">
-						<c:if test="${!empty message }"> ${message}</c:if>
 						<label>Enter OTP:</label><input type="Text" name="userotp"
 							class="form-control" placeholder="Password" required><br>
 					</div>
 					<br>
 					<div class="col-md-12 text-center">
 
+
+
 						<button type="submit" name="changeotp"
 							class="btn btn-success btn-lg">Verify OTP</button>
+						<br> <strong> <c:if test="${ !empty otpmsg}">${otpmsg} </c:if>
+							<strong> </strong></strong>
 					</div>
-				</form>
 			</div>
+			</form>
+		</div>
 		</div>
 	</section>
 

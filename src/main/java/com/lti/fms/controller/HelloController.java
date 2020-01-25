@@ -156,7 +156,7 @@ public class HelloController {
 		CustomerRegistration cuRegistration = null;
 
 		CustomerLogin customerLogin = new CustomerLogin();
-
+ 
 		customerLogin.setCustomerUserName(customerRegistration.getUsername());
 		customerLogin.setCustomerPassword(customerRegistration.getPassword());
 		customerLogin.setCustomerStatus("DEACTIVATED");

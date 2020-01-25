@@ -18,17 +18,16 @@ public class ProductDescription implements Serializable {
 	@Id
 	@GeneratedValue
 	private int productDescriptionId;
+	private int productId;
 	private String productDetailsDescription1;
 	private String productDetailsDescription2;
 	private String productDetailsDescription3;
 	private String productDetailsDescription4;
 	private String productDetailsDescription5;
+	private float productPrice;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "productID")
+	@OneToOne(mappedBy = "productDescription")
 	private Products products;
-
-	
 
 	/**
 	 * @return the productDescriptionId
@@ -128,6 +127,32 @@ public class ProductDescription implements Serializable {
 		this.products = products;
 	}
 
-	
+	/**
+	 * @return the productPrice
+	 */
+	public float getProductPrice() {
+		return productPrice;
+	}
+
+	/**
+	 * @param productPrice the productPrice to set
+	 */
+	public void setProductPrice(float productPrice) {
+		this.productPrice = productPrice;
+	}
+
+	/**
+	 * @return the productId
+	 */
+	public int getProductId() {
+		return productId;
+	}
+
+	/**
+	 * @param productId the productId to set
+	 */
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
 
 }

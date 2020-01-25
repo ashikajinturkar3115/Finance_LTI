@@ -23,18 +23,18 @@ public class ProductPurchased {
 	private int userId;
 	private int itemPurchasedPrice;
 	private String purchaseDate;
-	private int emiCardNo;
+	private String emiCardNo;
 	private String emiType;
 
+	/*
+	 * @ManyToOne
+	 * 
+	 * @JoinColumn(name = "productID") private Products products;
+	 */
+
 	@ManyToOne
-	@JoinColumn(name = "productID")
-	private Products products;
-	
-	@ManyToOne
-	@JoinColumn(name="emiCardId")
+	@JoinColumn(name = "emiCardId")
 	private EMICard emiCard;
-	
-	
 
 	public int getProductPurchasedId() {
 		return productPurchasedId;
@@ -76,11 +76,11 @@ public class ProductPurchased {
 		this.purchaseDate = purchaseDate;
 	}
 
-	public int getEmiCardNo() {
+	public String getEmiCardNo() {
 		return emiCardNo;
 	}
 
-	public void setEmiCardNo(int emiCardNo) {
+	public void setEmiCardNo(String emiCardNo) {
 		this.emiCardNo = emiCardNo;
 	}
 
@@ -95,16 +95,14 @@ public class ProductPurchased {
 	/**
 	 * @return the products
 	 */
-	public Products getProducts() {
-		return products;
-	}
-
-	/**
-	 * @param products the products to set
-	 */
-	public void setProducts(Products products) {
-		this.products = products;
-	}
+	/*
+	 * public Products getProducts() { return products; }
+	 * 
+	 *//**
+		 * @param products the products to set
+		 *//*
+			 * public void setProducts(Products products) { this.products = products; }
+			 */
 
 	/**
 	 * @return the emiCard
@@ -120,5 +118,4 @@ public class ProductPurchased {
 		this.emiCard = emiCard;
 	}
 
-	
 }

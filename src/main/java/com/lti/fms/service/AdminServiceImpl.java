@@ -26,10 +26,6 @@ public class AdminServiceImpl implements AdminService {
 	    public AdminDao getDao(){
 	        return dao;
 	    }
-
-	    public void setDao(AdminDao dao){
-	        this.dao=dao;
-	    }
 	    
 
 	    @Override

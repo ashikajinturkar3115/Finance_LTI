@@ -18,7 +18,7 @@
                 <div class="col-4 rounded border bg-white " id="col-Login" >
                             <p class="text-center"><strong>Login Admin</strong></p>
                         
-                            <form class="login-form"  method="POST" action="adminlogin">
+                            <form class="login-form"  method="POST" action="adminLogin">
                                 
                                 <div class="form-group">
                                     <label >Name</label>

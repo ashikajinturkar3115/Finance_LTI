@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 /**
  * @author Ashika Jinturkar
- *
+ * 
  */
 
 @Entity
@@ -31,6 +31,8 @@ public class EMIPurchaseDescription implements Serializable {
 
 	private String deductionDate;
 
+	private String status;
+
 	/**
 	 * @return the emiPurchaseDescpritionId
 	 */
@@ -44,8 +46,6 @@ public class EMIPurchaseDescription implements Serializable {
 	public void setEmiPurchaseDescpritionId(int emiPurchaseDescpritionId) {
 		this.emiPurchaseDescpritionId = emiPurchaseDescpritionId;
 	}
-
-	
 
 	public String getEmiCardNumber() {
 		return emiCardNumber;
@@ -95,6 +95,20 @@ public class EMIPurchaseDescription implements Serializable {
 	 */
 	public void setDeductionDate(String deductionDate) {
 		this.deductionDate = deductionDate;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

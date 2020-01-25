@@ -3,15 +3,10 @@
  */
 package com.lti.fms.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.servlet.ModelAndView;
 import com.lti.fms.entities.AdminLogin;
 import com.lti.fms.entities.CustomerLogin;
 import com.lti.fms.entities.CustomerRegistration;
+import com.lti.fms.entities.EMICard;
 import com.lti.fms.service.AdminService;
 import com.lti.fms.service.CustomerLoginService;
 import com.lti.fms.service.CustomerRegisterService;
@@ -52,7 +48,7 @@ public class AdminController {
 	}
 
 	/* for getting all admins */
-	@RequestMapping(value = "/adminlogin", method = RequestMethod.POST)
+	@RequestMapping(value = "/adminLogin", method = RequestMethod.POST)
 	public ModelAndView adminlogin(@RequestParam("adminname") String name, @RequestParam("adminpassword") String pass,
 			HttpSession httpSession) {
 		List<AdminLogin> adminLogins = adminService
@@ -100,6 +96,7 @@ public class AdminController {
 	public ModelAndView updateCustomerStatus(@PathVariable final int customerLoginId) {
 		CustomerLogin customerLogin = customerLoginService.findCustomerLoginById(customerLoginId);
 		ModelAndView modelAndView = new ModelAndView("status", "loginData", customerLogin);
+		modelAndView.addObject("emicardno", customerLogin.getEmiCardNo());
 		return modelAndView;
 
 	}
@@ -108,12 +105,49 @@ public class AdminController {
 	public ModelAndView updateCustomerData(@PathVariable final int customerLoginId,
 			@RequestParam("status") String status, @RequestParam("emicardno") String emicardno) {
 
+		ModelAndView modelAndView = null;
 		CustomerLogin customerLogin = customerLoginService.findCustomerLoginById(customerLoginId);
-		customerLogin.setCustomerStatus(status);
-		customerLogin.setEmiCardNo(emicardno);
+
+		if (customerLogin.getEmiCardNo() != null) {
+			System.out.println("inside if emi number if exists: ===" + customerLogin.getEmiCardNo());
+			customerLogin.setCustomerStatus(status);
+			modelAndView = new ModelAndView("adminlogin", "emicardno", customerLogin.getEmiCardNo());
+		} else {
+			EMICard emiCard = new EMICard();
+			System.out.println("inside else");
+			customerLogin.setEmiCardNo(emicardno);
+			customerLogin.setCustomerStatus(status);
+			System.out.println("sTATUS" + customerLogin.getCustomerStatus());
+			emiCard.setEmiCardNo(emicardno);
+			// System.out.println(customerLoginService.findUserByUserName("abc").getCustomerStatus());
+			System.out.println("Card Type of user from Register table is "
+					+ customerRegisterService.findUserByUserName(customerLogin.getCustomerUserName()).getCardType());
+			// System.out.println("card
+			// type===="+customerRegisterService.findCustomerByLoginId(customerLoginId).getCardType());
+			// PROBLEM
+			emiCard.setCardType(
+					customerRegisterService.findUserByUserName(customerLogin.getCustomerUserName()).getCardType());
+
+			// customerRegisterService.findUserByUserName(customerLogin.getCustomerUserName()).getCardType();
+
+			if (customerRegisterService.findUserByUserName(customerLogin.getCustomerUserName()).getCardType()
+					.equals("GOLD")) {
+				System.out.println("GOLD TYPE");
+				emiCard.setTotalBalance(10000);
+				emiCard.setAvailableBalance(10000);
+
+			} else {
+				System.out.println("TITANIUM TYPE");
+				emiCard.setTotalBalance(20000);
+				emiCard.setAvailableBalance(20000);
+			}
+			System.out.println("inside else setting emi card");
+			customerLogin.setEmiCard(emiCard);
+		}
+		System.out.println("PERSIST");
 		customerLoginService.updateCustomerLogin(customerLogin);
-		ModelAndView modelAndView = new ModelAndView("customerlist", "listOfCustomers",
-				customerRegisterService.getallCustomers());
+
+		modelAndView = new ModelAndView("customerlist", "listOfCustomers", customerRegisterService.getallCustomers());
 		return modelAndView;
 
 	}
@@ -130,7 +164,5 @@ public class AdminController {
 		ModelAndView modelAndView = new ModelAndView("customerDocuments", "imglist", imglist);
 		return modelAndView;
 	}
-
-	
 
 }

@@ -22,4 +22,8 @@ public interface CustomerRegisterDao {
 	public List<CustomerRegistration> getallCustomers();
 	
 	public void deleteCustomerRegistration(Integer customerId);
+	
+	CustomerRegistration findUserByUserName(String username);
+	
+	public CustomerRegistration findUserEmail(String email);
 }

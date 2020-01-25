@@ -24,4 +24,8 @@ public interface CustomerRegisterService {
 	
 	public void deleteCustomerRegistration(Integer customerId);
 	
+	CustomerRegistration findUserByUserName(String username);
+	
+	public CustomerRegistration findUserEmail(String email);
+	
 }

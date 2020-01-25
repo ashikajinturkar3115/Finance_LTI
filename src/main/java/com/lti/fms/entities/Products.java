@@ -8,7 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,15 +24,17 @@ public class Products implements Serializable {
 	private String productType;
 	private int productPrice;
 	private int productDescriptionId;
-	
-	@OneToMany(mappedBy = "products", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ProductPurchased> productPurchased = new ArrayList<ProductPurchased>();
 
-	
-	@OneToOne(mappedBy = "products")
-	private ProductDescription productDescription; 
-	
-	
+	/*
+	 * @OneToMany(mappedBy = "products", cascade = CascadeType.ALL, orphanRemoval =
+	 * true) private List<ProductPurchased> productPurchased = new
+	 * ArrayList<ProductPurchased>();
+	 */
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "productDescriptionId", insertable = false, updatable = false)
+	private ProductDescription productDescription;
+
 	public int getProductID() {
 		return productID;
 	}
@@ -76,16 +78,16 @@ public class Products implements Serializable {
 	/**
 	 * @return the productPurchased
 	 */
-	public List<ProductPurchased> getProductPurchased() {
-		return productPurchased;
-	}
-
-	/**
-	 * @param productPurchased the productPurchased to set
-	 */
-	public void setProductPurchased(List<ProductPurchased> productPurchased) {
-		this.productPurchased = productPurchased;
-	}
+	/*
+	 * public List<ProductPurchased> getProductPurchased() { return
+	 * productPurchased; }
+	 * 
+	 *//**
+		 * @param productPurchased the productPurchased to set
+		 *//*
+			 * public void setProductPurchased(List<ProductPurchased> productPurchased) {
+			 * this.productPurchased = productPurchased; }
+			 */
 
 	/**
 	 * @return the productDescription
@@ -100,10 +102,5 @@ public class Products implements Serializable {
 	public void setProductDescription(ProductDescription productDescription) {
 		this.productDescription = productDescription;
 	}
-
-	
-	
-	
-	
 
 }

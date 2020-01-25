@@ -13,6 +13,7 @@ import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,7 @@ import com.lti.fms.entities.CustomerLogin;
  *
  */
 @Repository
+@Transactional
 public class CustomerLoginDaoImpl implements CustomerLoginDao {
 
 	@PersistenceContext
@@ -72,11 +74,10 @@ public class CustomerLoginDaoImpl implements CustomerLoginDao {
 
 	@Override
 	public CustomerLogin updatePassword(int CustomerLoginId, String newpassword) {
-		CustomerLogin customerLogin=entityManager.find(CustomerLogin.class,CustomerLoginId);
+		CustomerLogin customerLogin = entityManager.find(CustomerLogin.class, CustomerLoginId);
 		customerLogin.setCustomerPassword(newpassword);
-		customerLogin=entityManager.merge(customerLogin);
-		       
-		        return customerLogin;
-		    }
-	}
+		customerLogin = entityManager.merge(customerLogin);
 
+		return customerLogin;
+	}
+}

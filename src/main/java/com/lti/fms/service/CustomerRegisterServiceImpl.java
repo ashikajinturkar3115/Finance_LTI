@@ -53,4 +53,16 @@ public class CustomerRegisterServiceImpl implements CustomerRegisterService{
 		customerRegisterDao.deleteCustomerRegistration(customerId);
 	}
 
+	@Override
+	public CustomerRegistration findUserByUserName(String username) {
+	
+		return customerRegisterDao.findUserByUserName(username);
+	}
+
+	@Override
+	public CustomerRegistration findUserEmail(String email) {
+		
+		return customerRegisterDao.findUserEmail(email);
+	}
+
 }
