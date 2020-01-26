@@ -45,7 +45,7 @@
 					<th>Address</th>
 					<th>Username</th>
 					<th>Card Type</th>
-					<!-- <th>Check Documents</th> -->
+					<th>Check Documents</th>
 					<th>Edit</th>
 					<th>Delete</th>
 				</tr>
@@ -63,8 +63,8 @@
 						<td>${x.address}</td>
 						<td>${x.username}</td>
 						<td>${x.cardType}</td>
-						<%-- <td><a href="/getUserDocuments/${x.customerId}">See
-								Doucuments</a></td> --%>
+						<td><a href="/getUserDocuments/${x.customerId}">See
+								Doucuments</a></td>
 						<td><a href="/customerEdit/${x.customerLoginId}">Edit</a></td>
 						<td><a href="/customerlist/${x.customerId}">Delete</a></td>
 					</tr>
