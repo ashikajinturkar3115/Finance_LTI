@@ -71,10 +71,11 @@
 						<br> <strong> <c:if test="${ !empty otpmsg}">${otpmsg} </c:if>
 							<strong> </strong></strong>
 					</div>
+				</form>
 			</div>
-			</form>
+
 		</div>
-		</div>
+
 	</section>
 
 

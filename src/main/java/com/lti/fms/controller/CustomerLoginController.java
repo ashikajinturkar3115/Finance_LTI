@@ -3,6 +3,11 @@
  */
 package com.lti.fms.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -15,19 +20,25 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.lti.fms.entities.CustomerLogin;
 import com.lti.fms.entities.CustomerRegistration;
 import com.lti.fms.entities.EMICard;
 import com.lti.fms.entities.EMIPurchaseDescription;
+import com.lti.fms.entities.ProductPurchased;
+import com.lti.fms.entities.Products;
 import com.lti.fms.service.CustomerLoginService;
 import com.lti.fms.service.CustomerRegisterService;
 import com.lti.fms.service.EmiPurchaseDescriptionService;
+import com.lti.fms.service.ProductService;
 
 /**
  * @author lntinfotech
@@ -50,6 +61,9 @@ public class CustomerLoginController {
 	@Autowired
 	private EmiPurchaseDescriptionService emiPurchaseDescriptionService;
 
+	@Autowired
+	private ProductService productService;
+
 	@RequestMapping(value = "/loginCustomer", method = RequestMethod.GET)
 	public ModelAndView showLoginPage() {
 		ModelAndView mv = new ModelAndView("loginCustomer");
@@ -63,6 +77,8 @@ public class CustomerLoginController {
 		ModelAndView mv = null;
 		List<EMIPurchaseDescription> descriptions = null;
 		List<CustomerLogin> customerLogins = customerLoginService.getAllCustomerLogins();
+		List<Products> list = new ArrayList<Products>();
+
 		Calendar c = Calendar.getInstance();
 
 		if (customerLogins.isEmpty())
@@ -86,7 +102,31 @@ public class CustomerLoginController {
 
 					}
 				}
+				/**
+				 * 
+				 */
+				if (!emiPurchaseDescriptionService.findProductIdByEMICardNo(customerLogin.getEmiCardNo()).isEmpty()) {
+					List<ProductPurchased> productPurchasedList = emiPurchaseDescriptionService
+							.findProductIdByEMICardNo(customerLogin.getEmiCardNo());
 
+					for (ProductPurchased productPurchased : productPurchasedList) {
+
+						productPurchased.getProductId();
+						list.add(productService.findProductById(productPurchased.getProductId()));
+						System.out.println("PRODUCT NOS " + productPurchased.getProductId());
+						System.out.println("PRODUCT NAME "
+								+ productService.findProductById(productPurchased.getProductId()).getProductName());
+
+					}
+					for (Products products : list) {
+						System.out.println("PRODUCT ID " + products.getProductID());
+						System.out.println("PRODUCT NAME " + products.getProductName());
+					}
+					session.setAttribute("list", list);
+				}
+				/**
+				 * 
+				 */
 				System.out.println("inside if ");
 				System.out.println("username fetched " + customerLogin.getCustomerUserName());
 
@@ -94,7 +134,8 @@ public class CustomerLoginController {
 				session.setAttribute("hello", "hello");
 				session.setAttribute("customerLogin", customerLogin);
 				session.setAttribute("emi", customerLogin.getEmiCard());
-
+				session.setAttribute("custName", customerRegisterService.findUserByUserName(username).getName());
+				session.setAttribute("cardType", customerRegisterService.findUserByUserName(username).getCardType());
 				for (EMIPurchaseDescription e : descriptions) {
 					System.out.println("emi description1" + e.getDeductionDate());
 					System.out.println("emi description2" + e.getMonthlyAmount());
@@ -192,22 +233,48 @@ public class CustomerLoginController {
 
 		ModelAndView mv = null;
 
-		if (newpassword.equals(confirmpassword)) {
-			CustomerLogin customerLogin = customerLoginService.findUserByUserName(username);
-			System.out.println("unm" + username);
+		CustomerLogin customerLogin = null;
 
-			int CustomerLoginId = customerLogin.getCustomerLoginId();
-			System.out.println(customerLogin.getCustomerLoginId());
+		List<CustomerLogin> customerLogins = customerLoginService.getAllCustomerLogins();
+		Calendar c = Calendar.getInstance();
+		if (customerLogins.isEmpty())
+			System.out.println("LIST EMPTY");
+		for (CustomerLogin customerLogin1 : customerLogins) {
+			if (customerLogin1.getCustomerUserName().equals(username.trim())) {
 
-			customerLogin = customerLoginService.updatePassword(CustomerLoginId, newpassword);
-			mv = new ModelAndView("loginCustomer", "message", "Password Changed Successfully");
-			return mv;
+				System.out.println("inside if ");
+				System.out.println("username fetched " + customerLogin1.getCustomerUserName());
 
-		} else {
-			mv = new ModelAndView("changePassword", "message", "Sorry Retype Password Again");
+				if (newpassword.trim().equals(confirmpassword.trim()))
+
+				{
+					customerLogin1 = customerLoginService.findUserByUserName(username);
+					System.out.println("unm" + username);
+
+					int CustomerLoginId = customerLogin1.getCustomerLoginId();
+					System.out.println(customerLogin1.getCustomerLoginId());
+
+					customerLogin1 = customerLoginService.updatePassword(CustomerLoginId, newpassword);
+					mv = new ModelAndView("loginCustomer", "message", "Password Changed Successfully");
+					return mv;
+
+				} else {
+					mv = new ModelAndView("changePassword", "message", "Sorry Retype Password Again");
+				}
+
+				return mv;
+			}
+
+			else {
+
+				mv = new ModelAndView("changePassword", "msgnouser",
+						"Sorry..!!userame does not match with registered username..!!");
+
+			}
+
 		}
-
 		return mv;
+
 	}
 
 	@RequestMapping(value = "/payMonthlyEmi/{emiPurchaseDescpritionId}")
@@ -255,4 +322,25 @@ public class CustomerLoginController {
 		emiPurchaseDescriptionService.updateEmiPurchaseDescription(emiPurchaseDescription);
 		return new ModelAndView("hellopage");
 	}
+
+	// Handling single file upload request
+	@PostMapping("/singleFileUpload")
+	public String singleFileUpload(@RequestParam("file") MultipartFile file, Model model) throws IOException {
+
+		// Save file on system
+		if (!file.getOriginalFilename().isEmpty()) {
+			BufferedOutputStream outputStream = new BufferedOutputStream(
+					new FileOutputStream(new File("D:/SingleFileUpload", file.getOriginalFilename())));
+			outputStream.write(file.getBytes());
+			outputStream.flush();
+			outputStream.close();
+
+			model.addAttribute("msg", "File uploaded successfully.");
+		} else {
+			model.addAttribute("msg", "Please select a valid file..");
+		}
+
+		return "fileUploadForm";
+	}
+
 }

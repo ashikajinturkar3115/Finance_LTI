@@ -19,21 +19,24 @@ import com.lti.fms.entities.User;
 import com.lti.fms.service.CustomerLoginService;
 import com.lti.fms.service.CustomerRegisterService;
 import com.lti.fms.service.IDetailsService;
+import com.lti.fms.service.ProductService;
 
 import java.io.File;
 
 import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.ByteArrayInputStream;
@@ -45,6 +48,9 @@ public class HelloController {
 
 	@Autowired
 	private CustomerLoginService customerLoginService;
+
+	@Autowired
+	private ProductService productService;
 
 	@Autowired
 	private CustomerRegisterService customerRegisterService;
@@ -69,7 +75,8 @@ public class HelloController {
 
 	@RequestMapping("/")
 	public ModelAndView index() {
-		return new ModelAndView("index", new HashMap<>());
+
+		return new ModelAndView("index", "products", productService.getAllProducts());
 	}
 
 	@RequestMapping("/hello")
@@ -149,6 +156,12 @@ public class HelloController {
 		return mv;
 	}
 
+	@RequestMapping("/aboutus")
+	public ModelAndView aboutUsPage() {
+		ModelAndView modelAndView = new ModelAndView("aboutus");
+		return modelAndView;
+	}
+
 	@RequestMapping("/registerCustomer")
 	public ModelAndView registerCustomer(
 			@ModelAttribute("customerRegistration") CustomerRegistration customerRegistration) {
@@ -156,7 +169,7 @@ public class HelloController {
 		CustomerRegistration cuRegistration = null;
 
 		CustomerLogin customerLogin = new CustomerLogin();
- 
+
 		customerLogin.setCustomerUserName(customerRegistration.getUsername());
 		customerLogin.setCustomerPassword(customerRegistration.getPassword());
 		customerLogin.setCustomerStatus("DEACTIVATED");

@@ -4,18 +4,14 @@
 package com.lti.fms.controller;
 
 import java.util.ArrayList;
-
 import java.util.List;
-
 import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import org.springframework.web.servlet.ModelAndView;
 import com.lti.fms.entities.AdminLogin;
 import com.lti.fms.entities.CustomerLogin;
@@ -68,7 +64,6 @@ public class AdminController {
 				mv = new ModelAndView("adminlogin");
 			}
 		}
-
 		httpSession.setAttribute("hello", "hello");
 		return mv;
 
@@ -133,13 +128,13 @@ public class AdminController {
 			if (customerRegisterService.findUserByUserName(customerLogin.getCustomerUserName()).getCardType()
 					.equals("GOLD")) {
 				System.out.println("GOLD TYPE");
-				emiCard.setTotalBalance(10000);
-				emiCard.setAvailableBalance(10000);
+				emiCard.setTotalBalance(30000);
+				emiCard.setAvailableBalance(30000);
 
 			} else {
 				System.out.println("TITANIUM TYPE");
-				emiCard.setTotalBalance(20000);
-				emiCard.setAvailableBalance(20000);
+				emiCard.setTotalBalance(50000);
+				emiCard.setAvailableBalance(50000);
 			}
 			System.out.println("inside else setting emi card");
 			customerLogin.setEmiCard(emiCard);
@@ -155,12 +150,10 @@ public class AdminController {
 	@RequestMapping("/getUserDocuments/{customerId}")
 	public ModelAndView showMeCustomerDocuments(@PathVariable("customerId") int customerId) {
 		CustomerRegistration customerRegistration = customerRegisterService.findCustomerById(customerId);
-
 		List<String> imglist = new ArrayList<String>();
 		imglist.add(customerRegistration.getFileNameAdhar());
 		imglist.add(customerRegistration.getFileNameCheque());
-		imglist.add(customerRegistration.getFileNamePAN());
-
+		imglist.add(customerRegistration.getFileNamePAN());		
 		ModelAndView modelAndView = new ModelAndView("customerDocuments", "imglist", imglist);
 		return modelAndView;
 	}

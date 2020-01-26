@@ -24,7 +24,8 @@
 <body>
 	<div class="container">
 		<form class="form-horizontal" action="registerCustomer" method="post"
-			modelAttribute="customerRegistration" onsubmit="return call();">
+			name="regF" modelAttribute="customerRegistration"
+			onsubmit="return call();">
 			<fieldset>
 				<table align="center" style="width: 50%" class="table-striped">
 					<caption>
@@ -43,8 +44,11 @@
 
 								<div class="controls">
 									<input type="text" id="username" name="username"
-										placeholder="Enter Username" class="input-xlarge"> <span
-										id="user"></span>
+										placeholder="Enter Username" class="input-xlarge"
+										onblur="checkExist()"> <span id="user"></span><span
+										id="isE"></span>
+
+
 								</div>
 
 							</td>
@@ -203,7 +207,7 @@
 				</table>
 
 				<div class="controls" align="center">
-					<button type="submit" class="btn-success">Upload</button>
+					<button type="submit" class="btn-success">Register</button>
 
 				</div>
 				<!-- <div class="control-group">
@@ -228,11 +232,9 @@
 	<script type="text/javascript">
 		function validatePass() {
 
-			alert("in pass");
 			var password = document.getElementById("password").value;
 			var confirmPassword = document.getElementById("confirmPassword").value;
 
-			alert("in pass()");
 			var ok = true;
 			if (password != confirmPassword) {
 				document.getElementById("confirm").textContent = "Password Doesn't Match";
@@ -252,7 +254,7 @@
 
 	<script type="text/javascript">
 		function validateEmail() {
-			alert("in email()");
+
 			var email = document.getElementById("email").value;
 			atpos = email.indexOf("@");
 			dotpos = email.lastIndexOf(".");
@@ -285,13 +287,34 @@
 		}
 	</script>
 
+	<!-- <script  type="text/javascript">
+		function validatePassword() {
+			alert("in validate()");
+			var password = document.getElementById("password").value;
+			var ok = true;
+			var passw = /^[A-Za-z]\w{7,14}$/;
+			if (!password.value.match(passw)) {
+				alert('Password must be 7 to 15 characters which contain only characters, numeric digits, underscore and first character must be a letter...!')
+				document.getElementById("pass").textContent = "Enter Valid password";
+				ok=false;
+	
+			} else {
+				alert('Correct');
+				return ok;
+				
+			}
+			return ok;
+		}
+	</script> -->
+
 	<script type="text/javascript">
 		function call() {
 			var ok = true;
-			alert("in call");
+
 			var statusa = validatePass();
 			var statusb = validateEmail();
 			var statusc = validateContact();
+
 			if (statusa == true && statusb == true && statusc == true) {
 				return ok;
 			} else {

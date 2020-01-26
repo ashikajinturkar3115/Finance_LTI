@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import com.lti.fms.entities.CustomerLogin;
 import com.lti.fms.entities.EMICard;
 import com.lti.fms.entities.EMIPurchaseDescription;
+import com.lti.fms.entities.ProductPurchased;
 
 /**
  * @author lntinfotech
@@ -81,6 +82,21 @@ public class EmiPurchaseDescriptionDaoImpl implements EmiPurchaseDescriptionDao 
 		EMIPurchaseDescription emDescription = emiPurchaseDescription;
 		entityManager.merge(emiPurchaseDescription);
 		return emDescription ;
+	}
+
+	@Override
+	public List<ProductPurchased> findProductIdByEMICardNo(String emiCardNo) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		AbstractQuery<ProductPurchased> cq1 = cb.createQuery(ProductPurchased.class);
+		Root<ProductPurchased> custRoot = cq1.from(ProductPurchased.class);
+
+		cq1.where(cb.equal(custRoot.get("emiCardNo"), emiCardNo));
+
+		CriteriaQuery<ProductPurchased> selectRecord = ((CriteriaQuery<ProductPurchased>) cq1).select(custRoot);
+		TypedQuery<ProductPurchased> tq1 = entityManager.createQuery(selectRecord);
+		List<ProductPurchased> list = tq1.getResultList();
+		return list;
+		
 	}
 
 }

@@ -16,48 +16,47 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 <style type="text/css">
+p {
+	text-align: center;
+}
 </style>
 
 </head>
 <body>
-	<form id="signInForm" class="form-horizontal"
-		data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
-		data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
-		data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"
-		action="customerLogin" method="POST">
-		<div id="legend">
-			<legend class="abc">Login</legend>
-		</div>
-		<div class="form-group">
-			<label class="col-sm-3 control-label">Username</label>
-			<div class="col-sm-4">
-				<input type="text" class="form-control" name="username" required
-					data-bv-notempty-message="The username is required" />
-			</div>
-		</div>
-		<br>
-		<div id="clr">
-			<c:if test="${!empty message }">${message }</c:if>
-		</div>
-		<div class="form-group">
-			<label class="col-sm-3 control-label">Password</label>
-			<div class="col-sm-4">
-				<input type="password" class="form-control" name="password" required
-					data-bv-notempty-message="The password is required" />
-			</div>
-		</div>
-		<br>
-		<div class="control-group">
-			<!-- Button -->
-			<div class="controls">
-				<input type="submit" value="Login" name="Login">
-			</div>
-		</div>
+	<div class="container">
+		<h3 align=center>Login Page</h3>
+		<form id="signInForm" action="customerLogin" method="POST">
+			<br> <br> <br>
+			<div class="form-group">
+				<p>
+					Username &nbsp;<input type="text" name="username" required />
+				</p>
 
-	</form>
+				<c:if test="${!empty message }">${message }</c:if>
+			</div>
 
-	<h4>
-		<a href="/forgetpassword">Forget Password</a>
-	</h4>
+			<br>
+			<div class="form-group">
+				<p>
+					Password &nbsp;&nbsp;<input type="password" name="password"
+						required />
+				</p>
+			</div>
+			<br>
+
+			<p>
+				<input type="submit" value="Login" name="Login"
+					class="btn btn-success btn-xl">
+			</p>
+			<p>
+				<a href="/forgetpassword">Forget Password</a>
+			</p>
+			<p>
+				Not a Member?&nbsp; <a href="/registerPage">Register Here</a>
+			</p>
+
+
+		</form>
+	</div>
 </body>
 </html>

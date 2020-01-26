@@ -3,6 +3,7 @@
 <!-- to enable expression language -->
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,8 +24,9 @@
 </style>
 <body>
 
-<h4><a href="/adminLogout">Logout</a></h4>
-
+	<h4>
+		<a href="/adminLogout">Logout</a>
+	</h4>
 
 
 	<div class="container">
@@ -43,7 +45,7 @@
 					<th>Address</th>
 					<th>Username</th>
 					<th>Card Type</th>
-					<th>Check Documents</th>
+					<!-- <th>Check Documents</th> -->
 					<th>Edit</th>
 					<th>Delete</th>
 				</tr>
@@ -61,8 +63,8 @@
 						<td>${x.address}</td>
 						<td>${x.username}</td>
 						<td>${x.cardType}</td>
-						<td><a href="/getUserDocuments/${x.customerId}">See
-								Doucuments</a></td>
+						<%-- <td><a href="/getUserDocuments/${x.customerId}">See
+								Doucuments</a></td> --%>
 						<td><a href="/customerEdit/${x.customerLoginId}">Edit</a></td>
 						<td><a href="/customerlist/${x.customerId}">Delete</a></td>
 					</tr>

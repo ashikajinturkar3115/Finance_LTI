@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lti.fms.service.CustomerLoginService;
 import com.lti.fms.service.EmiPurchaseDescriptionService;
@@ -37,6 +38,8 @@ import com.lti.fms.entities.Products;
 
 @Controller
 public class DashboardController {
+
+	private double val = 0;
 
 	@Autowired
 	private ProductService productService;
@@ -65,25 +68,58 @@ public class DashboardController {
 	}
 
 	@RequestMapping("/buyProduct/{productId}")
-	public ModelAndView buyProductAndShowDescription(@PathVariable("productId") int productId) {
+	public ModelAndView buyProductAndShowDescription(@PathVariable("productId") int productId,
+			HttpSession httpSession) {
+		ModelAndView modelAndView = null;
+		List<EMIPurchaseDescription> eList = new ArrayList<EMIPurchaseDescription>();
+
+		double totalAmountTobePaid = 0;
+
+		CustomerLogin customerLogin = (CustomerLogin) httpSession.getAttribute("customerLogin");
+		EMICard emiCard = customerLogin.getEmiCard();
+
+		double totalRemainingAmountToBeSpent = 0;
+
+		List<EMIPurchaseDescription> descriptions = emiPurchaseDescriptionService
+				.findAllEmiPurchaseDescriptionByEmiCard(customerLogin.getEmiCardNo());
+		if (descriptions.isEmpty()) {
+			totalRemainingAmountToBeSpent = emiCard.getAvailableBalance();
+		} else {
+			totalRemainingAmountToBeSpent = 0;
+		}
+
+		if (!descriptions.isEmpty()) {
+			for (EMIPurchaseDescription emiPurchaseDescription : descriptions) {
+				if (emiPurchaseDescription.getStatus().equals("PENDING")) {
+					eList.add(emiPurchaseDescription);
+				}
+			}
+
+			for (EMIPurchaseDescription emiPurchaseDescription : eList) {
+				totalAmountTobePaid = totalAmountTobePaid + emiPurchaseDescription.getMonthlyAmount();
+			}
+			totalRemainingAmountToBeSpent = emiCard.getAvailableBalance() - totalAmountTobePaid;
+		}
 		System.out.println("product id" + productId);
+
 		Products products = productService.findProductById(productId);
 
-		if (products == null) {
-			System.out.println("Products Null");
-		}
-		if (products.getProductDescription() == null) {
-			System.out.println("product Description is null");
-		}
 		ProductDescription productDescription = products.getProductDescription();
+		modelAndView = new ModelAndView("productDescription", "description", productDescription);
 
-		return new ModelAndView("productDescription", "description", productDescription);
+		if (totalRemainingAmountToBeSpent >= products.getProductPrice()) {
+			modelAndView.addObject("disable", "no");
+		} else {
+			modelAndView.addObject("disable", "yes");
+		}
+
+		return modelAndView;
 
 	}
 
 	@RequestMapping("/payNow/{productId}")
-	public ModelAndView payNow(@PathVariable("productId") int productId, @RequestParam("choice") String choice,
-			HttpSession httpSession) {
+	public String payNow(@PathVariable("productId") int productId, @RequestParam("choice") String choice,
+			HttpSession httpSession, RedirectAttributes redirectAttributes) {
 		System.out.println("choice====" + choice);
 		ModelAndView modelAndView = null;
 		int choice2 = Integer.parseInt(choice);
@@ -148,7 +184,7 @@ public class DashboardController {
 		/**
 		 * 
 		 */
-		emiCard.setAvailableBalance(emiCard.getTotalBalance() - (double) (products.getProductPrice() / choice2));
+		emiCard.setAvailableBalance(emiCard.getAvailableBalance() - (double) (products.getProductPrice() / choice2));
 		/**
 		 * 
 		 */
@@ -163,15 +199,19 @@ public class DashboardController {
 				emiPurchaseDescription.setDeductionDate(
 						c.get(Calendar.MONTH) + 1 + "/" + c.get(Calendar.DATE) + "/" + c.get(Calendar.YEAR));
 				emiPurchaseDescription.setStatus("PAID");
+				emiPurchaseDescription
+						.setTotalAmount(products.getProductPrice() - emiPurchaseDescription.getMonthlyAmount());
+				val = products.getProductPrice() - emiPurchaseDescription.getMonthlyAmount();
 			} else {
 				c.add(Calendar.MONTH, 1);
 				emiPurchaseDescription.setDeductionDate(
 						(c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.DATE) + "/" + c.get(Calendar.YEAR));
 				emiPurchaseDescription.setStatus("PENDING");
 
+				emiPurchaseDescription.setTotalAmount((int) (val - emiPurchaseDescription.getMonthlyAmount()));
+				val = (val - emiPurchaseDescription.getMonthlyAmount());
 			}
 
-			emiPurchaseDescription.setTotalAmount(products.getProductPrice());
 			emiPurchaseDescriptionService.createEmiPurchaseDescription(emiPurchaseDescription);
 		}
 
@@ -181,9 +221,10 @@ public class DashboardController {
 		CustomerLogin customerLogin2 = customerLoginService.updateCustomerLogin(customerLogin);
 		System.out.println("Customer Login is Successfully Saved");
 
-		modelAndView = new ModelAndView("saved", "customerLogin", customerLogin2);
-
-		return modelAndView;
+		modelAndView = new ModelAndView("hellopage", "customerLogin", customerLogin2);
+		redirectAttributes.addAttribute("username", customerLogin.getCustomerUserName());
+		redirectAttributes.addAttribute("password", customerLogin.getCustomerPassword());
+		return "redirect:/productlist";
 
 	}
 

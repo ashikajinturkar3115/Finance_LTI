@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.lti.fms.dao.EmiPurchaseDescriptionDao;
 import com.lti.fms.entities.EMICard;
 import com.lti.fms.entities.EMIPurchaseDescription;
+import com.lti.fms.entities.ProductPurchased;
 
 /**
  * @author lntinfotech
@@ -33,26 +34,32 @@ public class EmiPurchaseDescriptionServiceImpl implements EmiPurchaseDescription
 
 	@Override
 	public List<EMIPurchaseDescription> findAllEmiPurchaseDescriptionByEmiCard(String emiCard) {
-	
+
 		return eMIPurchaseDescriptiondao.findAllEmiPurchaseDescriptionByEmiCard(emiCard);
 	}
 
 	@Override
 	public EMICard findEmiCardByEmiCardId(String emiCardId) {
-		
+
 		return eMIPurchaseDescriptiondao.findEmiCardByEmiCardId(emiCardId);
 	}
 
 	@Override
 	public EMIPurchaseDescription findEmiPurchaseDescriptionById(int emiDesId) {
-		
+
 		return eMIPurchaseDescriptiondao.findEmiPurchaseDescriptionById(emiDesId);
 	}
 
 	@Override
 	public EMIPurchaseDescription updateEmiPurchaseDescription(EMIPurchaseDescription emiPurchaseDescription) {
-		
+
 		return eMIPurchaseDescriptiondao.updateEmiPurchaseDescription(emiPurchaseDescription);
+	}
+
+	@Override
+	public List<ProductPurchased> findProductIdByEMICardNo(String emiCardNo) {
+
+		return eMIPurchaseDescriptiondao.findProductIdByEMICardNo(emiCardNo);
 	}
 
 }

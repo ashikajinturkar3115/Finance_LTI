@@ -1,6 +1,7 @@
 package com.lti.fms.config;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -8,10 +9,14 @@ import javax.sql.DataSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.hibernate.dialect.Oracle10gDialect;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.http.CacheControl;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -23,15 +28,18 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.lti")
 @EnableTransactionManagement
-public class MyWebMVCConfig {
+public class MyWebMVCConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
 	@Bean
 	public ViewResolver getViewResolver() {
@@ -114,5 +122,18 @@ public class MyWebMVCConfig {
 
 		javaMailSender.setJavaMailProperties(javaMailProperties);
 		return javaMailSender;
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+		registry.addResourceHandler("/images/**").addResourceLocations("/WEB-INF/images/")
+				.setCacheControl(CacheControl.maxAge(2, TimeUnit.HOURS).cachePublic());
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		// TODO Auto-generated method stub
+
 	}
 }
